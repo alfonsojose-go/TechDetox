@@ -1,20 +1,36 @@
 // app/index.tsx
-import React from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router'; // Change this import
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import logo from '../assets/images/TechDetox_logo.png';
 import StartButton from '../components/startButton';
 
 export default function StartPage() {
-  const router = useRouter(); // Use useRouter instead of useNavigation
+  const router = useRouter();
+  const [hours, setHours] = useState('5');
+  const [minutes, setMinutes] = useState('00');
 
   const handleStart = () => {
-    router.push('/mainPage'); // Use router.push instead of navigation.navigate
+    // Convert to numbers and validate
+    const hoursNum = parseInt(hours) || 0;
+    const minutesNum = parseInt(minutes) || 0;
+    
+    // Calculate total minutes for the countdown
+    const totalMinutes = hoursNum * 60 + minutesNum;
+    
+    router.push({
+      pathname: '/mainPage',
+      params: { 
+        initialHours: hoursNum,
+        initialMinutes: minutesNum,
+        totalMinutes: totalMinutes
+      }
+    });
   };
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={{ width: 200, height: 100 }} />
+      <Image source={logo} style={{ width: 200, height: 175}} />
       <Text style={styles.title}>Welcome to Tech Detox!</Text>
       <View style={styles.content}>
         <Text style={styles.label}>Lock down duration</Text>
@@ -22,22 +38,23 @@ export default function StartPage() {
           <TextInput 
             style={styles.input}
             keyboardType="numeric"
-            defaultValue="5"
+            value={hours}
+            onChangeText={setHours}
             placeholder="Hours"
           />
           <TextInput 
             style={styles.input}
             keyboardType="numeric"
-            defaultValue="00"
+            value={minutes}
+            onChangeText={setMinutes}
             placeholder="Minutes"
           />
         </View>
-        <StartButton onPress={() => router.push('/mainPage')} />
+        <StartButton onPress={handleStart} />
       </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -73,16 +90,5 @@ const styles = StyleSheet.create({
     margin: 5,
     width: 80,
     textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
