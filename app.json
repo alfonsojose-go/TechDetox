@@ -16,8 +16,18 @@
         "WRITE_CONTACTS",
         "SEND_SMS",
         "READ_SMS",
+        "RECEIVE_SMS",
+        "CALL_PHONE",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "SEND_SMS",
+        "READ_SMS",
         "RECEIVE_SMS"
-      ]
+      ],
+      "bundleIdentifier": "y",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
