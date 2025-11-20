@@ -1,15 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Linking, Alert } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export default function MainPage() {
   const params = useLocalSearchParams();
+  const router = useRouter();
   const initialHours = parseInt(params.initialHours as string) || 5;
   const initialMinutes = parseInt(params.initialMinutes as string) || 0;
   const totalMinutes = parseInt(params.totalMinutes as string) || 300;
 
   const [timeLeft, setTimeLeft] = useState(totalMinutes * 60); // Convert to seconds
   const [isActive, setIsActive] = useState(true);
+
+  // Function to navigate to index page
+  const navigateToIndex = () => {
+    router.replace('/');
+  };
+
+  // Function to navigate to emergency page
+  const navigateToEmergency = () => {
+    router.push('/emergency');
+  };
+
+  // Function to open call logs
+  const openCallLogs = async () => {
+    try {
+      const supported = await Linking.canOpenURL('tel:');
+      
+      if (supported) {
+        await Linking.openURL('tel:');
+      } else {
+        Alert.alert('Error', 'Cannot open call logs on this device');
+      }
+    } catch (error) {
+      console.error('Error opening call logs:', error);
+      Alert.alert('Error', 'Failed to open call logs');
+    }
+  };
+
+  // Function to open messages app
+  const openMessages = async () => {
+    try {
+      const supported = await Linking.canOpenURL('sms:');
+      
+      if (supported) {
+        await Linking.openURL('sms:');
+      } else {
+        Alert.alert('Error', 'Cannot open messages on this device');
+      }
+    } catch (error) {
+      console.error('Error opening messages:', error);
+      Alert.alert('Error', 'Failed to open messages');
+    }
+  };
+
+  // Alternative approach for more specific functionality
+  const openCallLogsAlternative = async () => {
+    try {
+      await Linking.openURL('tel:');
+    } catch (error) {
+      console.error('Error opening call logs:', error);
+      try {
+        await Linking.openURL('tel:');
+      } catch (fallbackError) {
+        Alert.alert('Error', 'Cannot open phone app');
+      }
+    }
+  };
+
+  const openMessagesAlternative = async () => {
+    try {
+      await Linking.openURL('sms:');
+    } catch (error) {
+      console.error('Error opening messages:', error);
+      try {
+        await Linking.openURL('sms:?body=');
+      } catch (fallbackError) {
+        Alert.alert('Error', 'Cannot open messages app');
+      }
+    }
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -19,8 +89,9 @@ export default function MainPage() {
         setTimeLeft((time) => time - 1);
       }, 1000);
     } else if (timeLeft === 0) {
-      // Timer finished
+      // Timer finished - navigate to index page
       setIsActive(false);
+      navigateToIndex();
     }
 
     return () => {
@@ -53,7 +124,7 @@ export default function MainPage() {
           <Text>{new Date().toLocaleDateString()}</Text>
           <Text>{new Date().toLocaleTimeString()}</Text>
         </View>
-        <TouchableOpacity style={styles.emergencyButton} onPress={() => console.log('Emergency pressed!')}>
+        <TouchableOpacity style={styles.emergencyButton} onPress={navigateToEmergency}>
           <Image 
             source={require('../assets/images/emergency.png')}
             style={styles.emergencyImage}
@@ -90,7 +161,7 @@ export default function MainPage() {
 
         {/* Buttons side by side */}
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.button} onPress={() => console.log('Call pressed!')}>
+          <TouchableOpacity style={styles.button} onPress={openCallLogs}>
             <Image 
               source={require('../assets/images/call.png')}
               style={styles.buttonImage}
@@ -98,7 +169,7 @@ export default function MainPage() {
             <Text style={styles.buttonText}>Call</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => console.log('Messages pressed!')}>
+          <TouchableOpacity style={styles.button} onPress={openMessages}>
             <Image 
               source={require('../assets/images/messages.png')}
               style={styles.buttonImage}
