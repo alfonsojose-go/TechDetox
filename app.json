@@ -9,18 +9,34 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "permissions": [
+        "CALL_PHONE",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "SEND_SMS",
+        "READ_SMS",
+        "RECEIVE_SMS"
+      ]
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundImage": "./assets/images/icon.png",
+        "monochromeImage": "./assets/images/icon.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.nagabakunawa.MyApp"
+      "package": "com.nagabakunawa.MyApp",
+      "permissions": [
+        "CALL_PHONE",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "SEND_SMS",
+        "READ_SMS",
+        "RECEIVE_SMS"
+      ]
     },
     "web": {
       "output": "static",

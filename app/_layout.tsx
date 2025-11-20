@@ -1,9 +1,11 @@
 // app/_layout.tsx
 import { Stack } from 'expo-router';
 
+
 export default function RootLayout() {
   return (
-    <Stack>
+ 
+      <Stack>
       <Stack.Screen 
         name="index" 
         options={{ 
@@ -18,6 +20,15 @@ export default function RootLayout() {
           headerShown: false // Hide header for MainPage
         }} 
       />
+      <Stack.Screen 
+        name="emergency" 
+        options={{ 
+          title: 'Emergency',
+          headerShown: false // Hide header for Emergency
+        }} 
+      />
     </Stack>
+
+    
   );
 }
